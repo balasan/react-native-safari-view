@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 
 const NativeSafariViewManager = NativeModules.SafariViewManager;
-const eventEmitter = new NativeEventEmitter(NativeSafariViewManager);
+const eventEmitter = NativeSafariViewManager ? new NativeEventEmitter(NativeSafariViewManager) : null;
 
 export default {
   show(options) {
@@ -28,7 +28,10 @@ export default {
   },
 
   isAvailable() {
-    return NativeSafariViewManager.isAvailable();
+    if (NativeSafariViewManager) {
+      return NativeSafariViewManager.isAvailable();
+    }
+    return Promise.reject(new Error('SafariView cative component is missing'));
   },
 
   addEventListener(event, listener) {
